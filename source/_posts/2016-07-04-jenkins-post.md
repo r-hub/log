@@ -43,3 +43,27 @@ they are deleted. Dokku makes this easy with the new storage plugin
 (http://dokku.viewdocs.io/dokku/dokku-storage/), but for this I had to upgrade
 dokku to 0.6.4.
 
+It all seems to work fine, except that every time I redeploy the frontend,
+I usually need to redeploy the backend as well....
+
+Closes https://github.com/r-hub/rhub-frontend/issues/7
+
+## Periodically building the docker images
+
+For the devel R versions at least. I cannot do this on Docker Hub, because
+I have multiple images in a single repo (I really do not want 20 repos for
+20 images.) I also cannot do it on Travis, because with 6 images I already
+hit the 50 minutes time limit.
+
+So I'll do it on the Jenkins CI on Azure (cran.r-hub.io). It takes about
+2 hours to build them now. I'll do them once a week (Sunday evening), and
+also whenever the repo with the Dockerfiles changes. I have added a hook
+for this. The job pushes the images to Docker Hub.
+
+I still need to have a way to pull them to the worker nodes, I guess that'll
+be just another Jenkins job on the workers. This one can run every hour,
+if there are no new images, then it is quick. Also, just one job is enough,
+just need to configure it to run on all workers.
+
+Apparently, I need the `Elastic Axis plugin` for this. I run the pulls
+sequentially, so that the worker nodes don't update at the same time.
