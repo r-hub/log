@@ -2,7 +2,7 @@
 title: Fighting with Jenkins
 ---
 
-## Streaming output from Jenkins
+### Streaming output from Jenkins
 
 Seems like Jenkins does not drop TCP connections coming for the builder web
 app to stream the console output. What is even worse, it keeps a thread for
@@ -11,7 +11,7 @@ is it doing? It should be just listening on a socket....)
 
 Anyway, this needs to be fixed: https://github.com/r-hub/rhub-frontend/issues/8
 
-## `cron` app dies sometimes
+### `cron` app dies sometimes
 
 ```
 2016-07-04T10:45:10.973610931Z app[web.1]: > rhub-cron@1.0.0 start /app
@@ -36,7 +36,7 @@ Anyway, this needs to be fixed: https://github.com/r-hub/rhub-frontend/issues/8
 
 https://github.com/r-hub/rhub-cron/issues/1
 
-## Upload storage, dokku upgrade
+### Upload storage, dokku upgrade
 
 Uploads must be moved out of the container, because if I update the web app,
 they are deleted. Dokku makes this easy with the new storage plugin
@@ -48,7 +48,7 @@ I usually need to redeploy the backend as well....
 
 Closes https://github.com/r-hub/rhub-frontend/issues/7
 
-## Periodically building the docker images
+### Periodically building the docker images
 
 For the devel R versions at least. I cannot do this on Docker Hub, because
 I have multiple images in a single repo (I really do not want 20 repos for
@@ -67,3 +67,19 @@ just need to configure it to run on all workers.
 
 Apparently, I need the `Elastic Axis plugin` for this. I run the pulls
 sequentially, so that the worker nodes don't update at the same time.
+
+### Use a single keepalive job
+
+Instead of one per worker. Now that I have found the `Elastic Axis plugin`.
+
+### Test builder web app
+
+Is at http://builder-test.r-hub.io. Note the `http`, letsencrypt seems
+to be down, so I could not get a certificate. This has a different redirect
+URL, so it needs a separate GitHub application.
+
+### Alternative email address
+
+https://github.com/r-hub/rhub-frontend/issues/9 The test builder uses
+this now.
+
