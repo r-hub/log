@@ -1,5 +1,6 @@
 ---
-The `rhub` R package
+title: The `rhub` R package
+date: 2016-09-03
 ---
 
 I have started to implement the `rhub` R package, to start builds from

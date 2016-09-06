@@ -1,5 +1,6 @@
 ---
 title: Getting closer to Windows
+date: 2016-08-16
 ---
 
 ### Powershell for the win

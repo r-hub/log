@@ -1,5 +1,6 @@
 ---
-More Linux images
+title: More Linux images
+date: 2016-09-04
 ---
 
 We have added three new Linux images with Jeroen:
