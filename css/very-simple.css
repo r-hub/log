@@ -54,7 +54,7 @@ header {
   background: #333;
   color: #F1F1F1; }
   header .container {
-    font-family: Helverica, Arial, cursive, LiSu, sans-serif;
+    font-family: Helverica, Arial, LiSu, sans-serif;
     border-bottom: .3em solid #333; }
     header .container .title {
       color: #EEE;
