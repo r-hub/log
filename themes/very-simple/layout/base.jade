@@ -52,13 +52,6 @@ html
     // include the sidebar
     // include ./includes/sidebar.jade
 
-    // Blog title and subtitle
-    header: .container.header
-      a#logo.title(href=url_for('.'))= config.title
-      span.subtitle= config.subtitle
-      label#toggle-menu(for="menu", onclick)
-        i.fa.fa-bars
-
     // use checkbox hack for toggle nav-bar on small screens
     input#menu(type="checkbox")
 
@@ -67,8 +60,6 @@ html
       .container
         each nav, name in theme.menu
           +a_with_current(nav, __(name))
-
-    #header-margin-bar
 
     block main
 

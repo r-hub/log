@@ -7,6 +7,11 @@ block title
 block main
 
   article
+    div.container(style="background:rgb(28, 184, 65); border-radius: 25px;margin-bottom:50px;text-align:center;box-shadow: 10px 10px 5px #888888;")
+      h2(style="border-bottom:0px;")
+        a(href="https://builder.r-hub.io", style="text-decoration:none;border-bottom: 0px;color:white;") Try the r-hub package builder here
+    div.container
+      h1 The r-hub log
     #index-main.container.entries
       for post in page.posts.toArray()
         .post-entry
