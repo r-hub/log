@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>The r-hub log</title>
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://log.github.io/"/>
+  <updated>2016-09-13T15:59:11.000Z</updated>
+  <id>http://log.github.io/</id>
+  
+  <author>
+    <name>Gábor Csárdi</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Nice(r) output at the R command line</title>
+    <link href="http://log.github.io/2016/09/13/2016-09-13-nice-rhub-output/"/>
+    <id>http://log.github.io/2016/09/13/2016-09-13-nice-rhub-output/</id>
+    <published>2016-09-12T23:00:00.000Z</published>
+    <updated>2016-09-13T15:59:11.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>After fixing the streaming from the windows builds, I worked on making the output nicer in the <code>rhub</code> R package (not yet public) as well. Not finished yet, but already much-much better. Sneak peak:</p>
+<p><img src="/images/rhub-output.png" alt=""></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;After fixing the streaming from the windows builds, I worked on making the output nicer in the &lt;code&gt;rhub&lt;/code&gt; R package (not yet publi
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>The first Windows Build</title>
+    <link href="http://log.github.io/2016/09/12/2016-09-12-first-windows-build/"/>
+    <id>http://log.github.io/2016/09/12/2016-09-12-first-windows-build/</id>
+    <published>2016-09-11T23:00:00.000Z</published>
+    <updated>2016-09-13T12:27:14.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>… just finished on the test server. It does have some glitches, but it is a start!</p>
+<p>The main glitch is that the output is not streamed. This will require some more PowerShell tricks to fix. The problem is that the output is coming from another process, ran by another user, and this is apparently non-standard.</p>
+<p>A bigger issue will be to work out how we should use <code>sysreqs</code> on Windows.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;… just finished on the test server. It does have some glitches, but it is a start!&lt;/p&gt;
+&lt;p&gt;The main glitch is that the output is not strea
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Windows builds are streaming output</title>
+    <link href="http://log.github.io/2016/09/12/2016-09-13-windows-builds-streaming/"/>
+    <id>http://log.github.io/2016/09/12/2016-09-13-windows-builds-streaming/</id>
+    <published>2016-09-11T23:00:00.000Z</published>
+    <updated>2016-09-13T15:59:58.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>And it only took me half a day. :)</p>
+<p>Lesson learned: in PowerShell, if you <code>WaitForExit</code> on a <code>Process</code>, then the no output events are generated until it will be finished. I guess it should be named <code>WaitForExitAndDoNothingElse</code>… anyway, this is fixed now <a href="https://github.com/r-hub/wincheck/commit/ac9d4fc3e7e7f3edda06d08a0a432659404bd1f9" target="_blank" rel="external">in this commit</a>.</p>
+<p>Another painful lesson is that apparently not everything is included in a generalized image on Azure. I did install Carbon, and more PowerShell stuff before capturing the image, but they were not present in the image. :( I guess I need to install them to some system directory, instead of the user’s home.</p>
+<p>Now I need to section the output on Windows, <a href="https://github.com/r-hub/wincheck/issues/4" target="_blank" rel="external">this issue</a>), and then make the output nicer</p>
+<ul>
+<li>in the <code>rhub</code> client,</li>
+<li>on the web,</li>
+<li>in the email message.</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;And it only took me half a day. :)&lt;/p&gt;
+&lt;p&gt;Lesson learned: in PowerShell, if you &lt;code&gt;WaitForExit&lt;/code&gt; on a &lt;code&gt;Process&lt;/code&gt;, then 
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>More Linux images</title>
+    <link href="http://log.github.io/2016/09/04/2016-09-04-new-linux-images/"/>
+    <id>http://log.github.io/2016/09/04/2016-09-04-new-linux-images/</id>
+    <published>2016-09-03T23:00:00.000Z</published>
+    <updated>2016-09-13T12:27:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>We have added three new Linux images with Jeroen:</p>
+<ul>
+<li><code>linux-x86_64-centos6-epel</code></li>
+<li><code>linux-x86_64-centos6-epel-rdt</code></li>
+<li><code>linux-x86_64-rocker-gcc-san</code></li>
+</ul>
+<p>The last one runs the check with address sanitizer turned on. Unfortunately the ASAN/UBSAN output is suppressed currently,<br>so we still need to work on this. :(</p>
+<p>Some lessons learned, and improvements:</p>
+<ul>
+<li>The images must have <code>curl</code>, this is there on the CentOS6 images by default, but not on the Rocker images.</li>
+<li>The images must have <code>xvfb</code> as well.</li>
+<li>We are running xvfb now with a 1024x768 screen, and 24 bits color depth. This eliminates some R problems, that come up when not enough colors are available.</li>
+<li>The images may set the <code>RBINARY</code> environment variable. The ASAN image uses this to start the ASAN-augmented version of R, which is called <code>RD</code> on the image.</li>
+<li>Jenkins now starts <code>bash</code> in the Docker container with <code>-l</code>, to make it a login shell. This allows running <code>/etc/bashrc</code> in the image. The <code>epel-rdt</code> image runs the RDT config file this way.</li>
+</ul>
+<h3 id="System-requirements-improvements"><a href="#System-requirements-improvements" class="headerlink" title="System requirements improvements"></a>System requirements improvements</h3><p>We have also added a bunch of new system requirements.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;We have added three new Linux images with Jeroen:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;linux-x86_64-centos6-epel&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;linux-x86_64-centos6
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>The `rhub` R package</title>
+    <link href="http://log.github.io/2016/09/03/2016-09-03-the-rhub-package/"/>
+    <id>http://log.github.io/2016/09/03/2016-09-03-the-rhub-package/</id>
+    <published>2016-09-02T23:00:00.000Z</published>
+    <updated>2016-09-13T12:23:33.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>I have started to implement the <code>rhub</code> R package, to start builds from<br>within R. Its repository is now private, until it stabilizes a bit. Let me<br>know if you want to take an early peek at it.</p>
+<p>It’s UI needs a lot of improvements, but the streaming part works fine,<br>thanks to the streaming support of the <code>curl</code> R package.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;I have started to implement the &lt;code&gt;rhub&lt;/code&gt; R package, to start builds from&lt;br&gt;within R. Its repository is now private, until it st
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Getting closer to Windows</title>
+    <link href="http://log.github.io/2016/08/16/2016-08-16-windows-checks/"/>
+    <id>http://log.github.io/2016/08/16/2016-08-16-windows-checks/</id>
+    <published>2016-08-15T23:00:00.000Z</published>
+    <updated>2016-09-13T12:26:30.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="Powershell-for-the-win"><a href="#Powershell-for-the-win" class="headerlink" title="Powershell for the win"></a>Powershell for the win</h3><p>I am getting closer to supporting windows builds. I started to write two Powershell scripts, that will eventually perform the windows builds on the slaves: <a href="https://github.com/r-hub/wincheck" target="_blank" rel="external">https://github.com/r-hub/wincheck</a></p>
+<p>The first one <code>run.ps1</code></p>
+<ul>
+<li>creates a new user with a random username,</li>
+<li>creates its home directory as well,</li>
+<li>makes sure that the home directory is not readable by other users,</li>
+<li>starts the build process (other script) as the newly created user, and makes sure that its standard output and error are redirected and still printed to the screen.</li>
+</ul>
+<p>The other script is <code>slave.ps1</code>. This runs the actual <code>R CMD check</code>. It all works now, but I need more features, e.g. installing dependencies. In general it should do everything the unix version (at <a href="https://github.com/r-hub/rhub-backend/blob/master/templates/jenkins.sh" target="_blank" rel="external">https://github.com/r-hub/rhub-backend/blob/master/templates/jenkins.sh</a>) does.</p>
+<p>Eventually these powershell scripts should go in the <code>rhub-backend</code> repository I believe.</p>
+<p>Somewhat surprisingly, Powershell is not very good at some sysadmin tasks, e.g. creating local users is hard in plain Powershell. So for this we require Carbon (<a href="http://get-carbon.org/" target="_blank" rel="external">http://get-carbon.org/</a>) for now, this has to be installed on the Windows builders.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;Powershell-for-the-win&quot;&gt;&lt;a href=&quot;#Powershell-for-the-win&quot; class=&quot;headerlink&quot; title=&quot;Powershell for the win&quot;&gt;&lt;/a&gt;Powershell for the w
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Binary cache &amp; Windows</title>
+    <link href="http://log.github.io/2016/07/05/2016-07-05-binary-cache/"/>
+    <id>http://log.github.io/2016/07/05/2016-07-05-binary-cache/</id>
+    <published>2016-07-04T23:00:00.000Z</published>
+    <updated>2016-09-13T12:26:03.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="Some-more-Linux-builders"><a href="#Some-more-Linux-builders" class="headerlink" title="Some more Linux builders"></a>Some more Linux builders</h3><ul>
+<li><code>r-patched-linux-x86_64</code> Debian testing</li>
+<li><code>r-devel-linux-x86_64-ubuntu-16.04</code> most recent Ubuntu LTS</li>
+<li><code>r-release-linux-x86_64-ubuntu-16.04</code> most recent Ubuntu LTS</li>
+<li><code>r-devel-linux-x86_64-debian-jessie</code> stable Debian</li>
+<li><code>r-release-linux-x86_64-debian-jessie</code> stable Debian</li>
+</ul>
+<p>Adding new images is somewhat complicated. I need to add them at several places:</p>
+<ul>
+<li>Add the Dockerfile to the rhub-linux-builders repo.</li>
+<li>Create a repository on Docker Hub.</li>
+<li>Add an entry to <code>jenkins.sh</code> in the same repo, to build it periodically.</li>
+<li>Add an entry to <code>public/data/platforms.json</code> on the rhub-frontend repo.</li>
+<li>Add it to the Jenkins job that pulls images to the workers.</li>
+<li>Run the Jenkins job that builds the images, and/or build them by hand and push them to Docker Hub</li>
+<li>Add the platform to the sysreqs database, if it is not there yet. Update the database from GitHub.</li>
+</ul>
+<p>Then one needs to re-reploy the frontend (!).</p>
+<p>We need some central configuration store, like <code>etcd</code>, or something similar, to avoid this lengthy and error-prone procedure.</p>
+<h3 id="Windows-builders"><a href="#Windows-builders" class="headerlink" title="Windows builders"></a>Windows builders</h3><p>Jenkins has an Azure plugin. Unfortunately it uses the ‘classic’ system, which is soft-deprecated on Azure, and the branch to update it to the new Azure Resource Manager seems to be dead.</p>
+<p>After a couple of hours I could get it work. Key points:</p>
+<ul>
+<li>Use the JNLP launch method. Much easier than SSH.</li>
+<li>The JNLP port needs to be fixed to 50000, but it was already fixed, anyway.</li>
+<li>Leave the 8080 and 50000 ports open on the master. These must be restricted to the slave IP addresses in the future.</li>
+<li>A new user ‘slave’ is needed in Jenkins, and its name and token must be added to the example init file.</li>
+<li>The new user needs capabilities: overall/read, slave/connect and slave/disconnect.</li>
+</ul>
+<p>As for provisioning, I’ll write a short powershell script that downloads the real provisioning script from GitHub, similarly to how r-appveyor works.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;Some-more-Linux-builders&quot;&gt;&lt;a href=&quot;#Some-more-Linux-builders&quot; class=&quot;headerlink&quot; title=&quot;Some more Linux builders&quot;&gt;&lt;/a&gt;Some more Linu
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Fighting with Jenkins</title>
+    <link href="http://log.github.io/2016/07/04/2016-07-04-jenkins-post/"/>
+    <id>http://log.github.io/2016/07/04/2016-07-04-jenkins-post/</id>
+    <published>2016-07-03T23:00:00.000Z</published>
+    <updated>2016-09-13T12:25:10.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="Streaming-output-from-Jenkins"><a href="#Streaming-output-from-Jenkins" class="headerlink" title="Streaming output from Jenkins"></a>Streaming output from Jenkins</h3><p>Seems like Jenkins does not drop TCP connections coming for the builder web app to stream the console output. What is even worse, it keeps a thread for each connection, and gets really slow already around ~20 threads. (What the hell is it doing? It should be just listening on a socket….)</p>
+<p>Anyway, this needs to be fixed: <a href="https://github.com/r-hub/rhub-frontend/issues/8" target="_blank" rel="external">https://github.com/r-hub/rhub-frontend/issues/8</a></p>
+<h3 id="cron-app-dies-sometimes"><a href="#cron-app-dies-sometimes" class="headerlink" title="cron app dies sometimes"></a><code>cron</code> app dies sometimes</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">2016-07-04T10:45:10.973610931Z app[web.1]: &gt; rhub-cron@1.0.0 start /app</div><div class="line">2016-07-04T10:45:10.973617561Z app[web.1]: &gt; node ./bin/scheduler</div><div class="line">2016-07-04T10:45:10.973623287Z app[web.1]:</div><div class="line">2016-07-04T11:42:42.620726576Z app[web.1]: /app/index.js:33</div><div class="line">2016-07-04T11:42:42.620802676Z app[web.1]: 	jen.build.get(job.name, data.lastBuild.number, function(err, data) &#123;</div><div class="line">2016-07-04T11:42:42.620850863Z app[web.1]: 	                                      ^</div><div class="line">2016-07-04T11:42:42.620885526Z app[web.1]:</div><div class="line">2016-07-04T11:42:42.620919177Z app[web.1]: TypeError: Cannot read property &apos;number&apos; of null</div><div class="line">2016-07-04T11:42:42.620927075Z app[web.1]:     at /app/index.js:33:40</div><div class="line">2016-07-04T11:42:42.620932178Z app[web.1]:     at next (/app/node_modules/papi/lib/client.js:292:32)</div><div class="line">2016-07-04T11:42:42.620946196Z app[web.1]:     at Jenkins.body (/app/node_modules/jenkins/lib/middleware.js:14:3)</div><div class="line">2016-07-04T11:42:42.620950958Z app[web.1]:     at next (/app/node_modules/papi/lib/client.js:298:10)</div><div class="line">2016-07-04T11:42:42.620955722Z app[web.1]:     at Jenkins.&lt;anonymous&gt; (/app/node_modules/jenkins/lib/middleware.js:88:5)</div><div class="line">2016-07-04T11:42:42.620960668Z app[web.1]:     at next (/app/node_modules/papi/lib/client.js:298:10)</div><div class="line">2016-07-04T11:42:42.620965208Z app[web.1]:     at Jenkins._onResponse (/app/node_modules/jenkins/lib/jenkins.js:109:3)</div><div class="line">2016-07-04T11:42:42.620981759Z app[web.1]:     at next (/app/node_modules/papi/lib/client.js:298:10)</div><div class="line">2016-07-04T11:42:42.620988281Z app[web.1]:     at IncomingMessage.&lt;anonymous&gt; (/app/node_modules/papi/lib/client.js:598:7)</div><div class="line">2016-07-04T11:42:42.621025915Z app[web.1]:     at emitNone (events.js:85:20)</div></pre></td></tr></table></figure>
+<p><a href="https://github.com/r-hub/rhub-cron/issues/1" target="_blank" rel="external">https://github.com/r-hub/rhub-cron/issues/1</a></p>
+<h3 id="Upload-storage-dokku-upgrade"><a href="#Upload-storage-dokku-upgrade" class="headerlink" title="Upload storage, dokku upgrade"></a>Upload storage, dokku upgrade</h3><p>Uploads must be moved out of the container, because if I update the web app, they are deleted. Dokku makes this easy with the new storage plugin (<a href="http://dokku.viewdocs.io/dokku/dokku-storage/" target="_blank" rel="external">http://dokku.viewdocs.io/dokku/dokku-storage/</a>), but for this I had to upgrade dokku to 0.6.4.</p>
+<p>It all seems to work fine, except that every time I redeploy the frontend, I usually need to redeploy the backend as well….</p>
+<p>Closes <a href="https://github.com/r-hub/rhub-frontend/issues/7" target="_blank" rel="external">https://github.com/r-hub/rhub-frontend/issues/7</a></p>
+<h3 id="Periodically-building-the-docker-images"><a href="#Periodically-building-the-docker-images" class="headerlink" title="Periodically building the docker images"></a>Periodically building the docker images</h3><p>For the devel R versions at least. I cannot do this on Docker Hub, because I have multiple images in a single repo (I really do not want 20 repos for 20 images.) I also cannot do it on Travis, because with 6 images I already hit the 50 minutes time limit.</p>
+<p>So I’ll do it on the Jenkins CI on Azure (cran.r-hub.io). It takes about 2 hours to build them now. I’ll do them once a week (Sunday evening), and also whenever the repo with the Dockerfiles changes. I have added a hook for this. The job pushes the images to Docker Hub.</p>
+<p>I still need to have a way to pull them to the worker nodes, I guess that’ll be just another Jenkins job on the workers. This one can run every hour, if there are no new images, then it is quick. Also, just one job is enough, just need to configure it to run on all workers.</p>
+<p>Apparently, I need the <code>Elastic Axis plugin</code> for this. I run the pulls sequentially, so that the worker nodes don’t update at the same time.</p>
+<h3 id="Use-a-single-keepalive-job"><a href="#Use-a-single-keepalive-job" class="headerlink" title="Use a single keepalive job"></a>Use a single keepalive job</h3><p>Instead of one per worker. Now that I have found the <code>Elastic Axis plugin</code>.</p>
+<h3 id="Test-builder-web-app"><a href="#Test-builder-web-app" class="headerlink" title="Test builder web app"></a>Test builder web app</h3><p>Is at <a href="http://builder-test.r-hub.io" target="_blank" rel="external">http://builder-test.r-hub.io</a>. Note the <code>http</code>, letsencrypt seems to be down, so I could not get a certificate. This has a different redirect URL, so it needs a separate GitHub application.</p>
+<h3 id="Alternative-email-address"><a href="#Alternative-email-address" class="headerlink" title="Alternative email address"></a>Alternative email address</h3><p><a href="https://github.com/r-hub/rhub-frontend/issues/9" target="_blank" rel="external">https://github.com/r-hub/rhub-frontend/issues/9</a> The test builder uses this now.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;Streaming-output-from-Jenkins&quot;&gt;&lt;a href=&quot;#Streaming-output-from-Jenkins&quot; class=&quot;headerlink&quot; title=&quot;Streaming output from Jenkins&quot;&gt;&lt;/a
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>The r-hub log</title>
+    <link href="http://log.github.io/2016/07/04/2016-07-04-the-r-hub-log/"/>
+    <id>http://log.github.io/2016/07/04/2016-07-04-the-r-hub-log/</id>
+    <published>2016-07-03T23:00:00.000Z</published>
+    <updated>2016-09-13T12:25:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Welcome to the r-hub log. r-hub is a project to build infrastructure for R users. See more about it in the <a href="https://github.com/r-hub/proposal" target="_blank" rel="external">project proposal</a>.</p>
+<h2 id="About-this-log"><a href="#About-this-log" class="headerlink" title="About this log"></a>About this log</h2><p>This log serves as a notebook for what is being done on r-hub. I probably will not make an effort to make it very readable, and it will be mostly technical.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Welcome to the r-hub log. r-hub is a project to build infrastructure for R users. See more about it in the &lt;a href=&quot;https://github.com/r-
+    
+    </summary>
+    
+    
+  </entry>
+  
+</feed>
