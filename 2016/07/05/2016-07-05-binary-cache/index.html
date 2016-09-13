@@ -5,28 +5,28 @@
 <li><code>r-devel-linux-x86_64-debian-jessie</code> stable Debian</li>
 <li><code>r-release-linux-x86_64-debian-jessie</code> stable Debian</li>
 </ul>
-<p>Adding new images is somewhat complicated. I need to add them at several<br>places:</p>
+<p>Adding new images is somewhat complicated. I need to add them at several places:</p>
 <ul>
 <li>Add the Dockerfile to the rhub-linux-builders repo.</li>
 <li>Create a repository on Docker Hub.</li>
 <li>Add an entry to <code>jenkins.sh</code> in the same repo, to build it periodically.</li>
 <li>Add an entry to <code>public/data/platforms.json</code> on the rhub-frontend repo.</li>
 <li>Add it to the Jenkins job that pulls images to the workers.</li>
-<li>Run the Jenkins job that builds the images, and/or build them by hand<br>and push them to Docker Hub</li>
-<li>Add the platform to the sysreqs database, if it is not there yet.<br>Update the database from GitHub.</li>
+<li>Run the Jenkins job that builds the images, and/or build them by hand and push them to Docker Hub</li>
+<li>Add the platform to the sysreqs database, if it is not there yet. Update the database from GitHub.</li>
 </ul>
 <p>Then one needs to re-reploy the frontend (!).</p>
-<p>We need some central configuration store, like <code>etcd</code>, or something<br>similar, to avoid this lengthy and error-prone procedure.</p>
-<h3 id="Windows-builders"><a href="#Windows-builders" class="headerlink" title="Windows builders"></a>Windows builders</h3><p>Jenkins has an Azure plugin. Unfortunately it uses the ‘classic’ system,<br>which is soft-deprecated on Azure, and the branch to update it to the<br>new Azure Resource Manager seems to be dead.</p>
+<p>We need some central configuration store, like <code>etcd</code>, or something similar, to avoid this lengthy and error-prone procedure.</p>
+<h3 id="Windows-builders"><a href="#Windows-builders" class="headerlink" title="Windows builders"></a>Windows builders</h3><p>Jenkins has an Azure plugin. Unfortunately it uses the ‘classic’ system, which is soft-deprecated on Azure, and the branch to update it to the new Azure Resource Manager seems to be dead.</p>
 <p>After a couple of hours I could get it work. Key points:</p>
 <ul>
 <li>Use the JNLP launch method. Much easier than SSH.</li>
-<li>The JNLP port needs to be fixed to 50000, but it was already<br>fixed, anyway.</li>
-<li>Leave the 8080 and 50000 ports open on the master. These must be<br>restricted to the slave IP addresses in the future.</li>
-<li>A new user ‘slave’ is needed in Jenkins, and its name and token<br>must be added to the example init file.</li>
-<li>The new user needs capabilities: overall/read, slave/connect and<br>slave/disconnect.</li>
+<li>The JNLP port needs to be fixed to 50000, but it was already fixed, anyway.</li>
+<li>Leave the 8080 and 50000 ports open on the master. These must be restricted to the slave IP addresses in the future.</li>
+<li>A new user ‘slave’ is needed in Jenkins, and its name and token must be added to the example init file.</li>
+<li>The new user needs capabilities: overall/read, slave/connect and slave/disconnect.</li>
 </ul>
-<p>As for provisioning, I’ll write a short powershell script that downloads<br>the real provisioning script from GitHub, similarly to how r-appveyor<br>works.</p>
+<p>As for provisioning, I’ll write a short powershell script that downloads the real provisioning script from GitHub, similarly to how r-appveyor works.</p>
 </div><!-- comment system--><div class="container"><hr></div></article><footer id="footer"><div class="container"><div class="bar"><div class="social"><a href="/atom.xml" target="_blank"><i class="fa fa-rss"></i></a></div><div class="footer">© 2016 <a href="/" rel="nofollow">The r-hub log</a>. Powered by <a rel="nofollow" target="_blank" href="https://hexo.io">Hexo</a>. Theme <a target="_blank" href="https://github.com/lotabout/very-simple">very-simple</a>.</div></div></div></footer><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css"><script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script><script src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script><script>$(document).ready(function() {
     $(".fancybox").fancybox();
 });
