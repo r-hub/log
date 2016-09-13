@@ -1,6 +1,6 @@
 ---
 title: Windows builds are streaming output
-date: 2016-09-13
+date: 2016-09-12
 ---
 
 And it only took me half a day. :)
