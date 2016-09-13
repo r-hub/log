@@ -70,3 +70,9 @@ theme: very-simple
 deploy:
   type: git
   repo: git@github.com:r-hub/log.git
+
+feed:
+  type: atom
+  path: atom.xml
+  limit: 20
+  hub:
