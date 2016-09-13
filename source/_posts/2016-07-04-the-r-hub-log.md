@@ -1,12 +1,10 @@
 ---
 title: The r-hub log
+date: 2016-07-04
 ---
-Welcome to the r-hub log. r-hub is a project to build infrastructure
-for R users. See more about it in the
-[project proposal](https://github.com/r-hub/proposal).
+
+Welcome to the r-hub log. r-hub is a project to build infrastructure for R users. See more about it in the [project proposal](https://github.com/r-hub/proposal).
 
 ## About this log
 
-This log serves as a notebook for what is being done on r-hub.
-I probably will not make an effort to make it very readable, and it will
-be mostly technical.
+This log serves as a notebook for what is being done on r-hub. I probably will not make an effort to make it very readable, and it will be mostly technical.
