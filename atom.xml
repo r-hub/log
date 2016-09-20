@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://log.github.io/"/>
-  <updated>2016-09-13T19:39:06.000Z</updated>
+  <updated>2016-09-20T12:52:26.000Z</updated>
   <id>http://log.github.io/</id>
   
   <author>
@@ -14,6 +14,71 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Some regular admin tasks to start the day</title>
+    <link href="http://log.github.io/2016/09/19/2016-09-19-admin-tasks/"/>
+    <id>http://log.github.io/2016/09/19/2016-09-19-admin-tasks/</id>
+    <published>2016-09-18T23:00:00.000Z</published>
+    <updated>2016-09-20T12:52:26.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Yuuuhooooo! Working on r-hub again!</p>
+<h2 id="OS-updates"><a href="#OS-updates" class="headerlink" title="OS updates"></a>OS updates</h2><p>First of all, I ran <code>apt-get update; apt-get upgrade</code> etc. on the various hosts:</p>
+<ul>
+<li><code>r-hub.io</code></li>
+<li><code>ci.r-hub.io</code></li>
+<li>Linux builder 1</li>
+<li>Linux builder 2</li>
+<li><code>cran.r-hub.io</code></li>
+<li><code>monitor.r-hub.io</code></li>
+<li><code>install-github.me</code></li>
+<li><code>jenkins.r-pkg.org</code></li>
+<li><code>seer.r-pkg.org</code></li>
+<li><code>crandb.r-pkg.org</code></li>
+<li><code>docs.r-pkg.org</code></li>
+<li><code>www.r-pkg.org</code></li>
+</ul>
+<p>AWS changed the IP address of <code>ci.r-hub.io</code>, because I stopped it. Hmmm, it really should not do that. I had to change it in the DNS.</p>
+<h2 id="Running-out-of-disk"><a href="#Running-out-of-disk" class="headerlink" title="Running out of disk"></a>Running out of disk</h2><p>The disk of <code>cran-r-hub.io</code> was filling up. This is the machine that builds the Docker images for the builders, so it needs more disk as we are adding more images. It is easy to resize the disk on Azure, just:</p>
+<ul>
+<li>shut down the machine,</li>
+<li><em>stop it</em> from the Azure web portal (wait for it…),</li>
+<li>resize the disk on the Azure web portal,</li>
+<li>start the machine.<br>Resized to 100GiB now, this should be enough for a lot<br>of images.</li>
+</ul>
+<h2 id="SSL-certificates"><a href="#SSL-certificates" class="headerlink" title="SSL certificates"></a>SSL certificates</h2><p>Next, I updated the SSL certificates for</p>
+<ul>
+<li><code>ci.r-hub.io</code></li>
+<li><code>cranlogs.r-pkg.org</code></li>
+</ul>
+<h2 id="Monitoring"><a href="#Monitoring" class="headerlink" title="Monitoring"></a>Monitoring</h2><p>I added monitoring to the following machine:</p>
+<ul>
+<li><code>cran.r-hub.io</code></li>
+</ul>
+<p>The following are monitored:</p>
+<ul>
+<li>whether the machine is up,</li>
+<li>disk space,</li>
+<li>cpu load</li>
+</ul>
+<p>For Linux machines, I had to run this. Add repos and install packages first:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">wget -q https://sensu.global.ssl.fastly.net/apt/pubkey.gpg -O- | sudo apt-key add -</div><div class="line"><span class="built_in">echo</span> <span class="string">"deb https://sensu.global.ssl.fastly.net/apt sensu main"</span> | sudo tee /etc/apt/sources.list.d/sensu.list</div><div class="line">sudo apt-get update</div><div class="line">sudo apt-get install sensu</div></pre></td></tr></table></figure></p>
+<p>Put the following into <code>/etc/sensu/conf.d/rabbitmq.json</code>:<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"rabbitmq"</span>: &#123;</div><div class="line">    <span class="attr">"ssl"</span>: &#123;</div><div class="line">      <span class="attr">"cert_chain_file"</span>: <span class="string">"/etc/sensu/ssl/cert.pem"</span>,</div><div class="line">      <span class="attr">"private_key_file"</span>: <span class="string">"/etc/sensu/ssl/key.pem"</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">"host"</span>: <span class="string">"monitor.r-hub.io"</span>,</div><div class="line">    <span class="attr">"port"</span>: <span class="number">5671</span>,</div><div class="line">    <span class="attr">"vhost"</span>: <span class="string">"/sensu"</span>,</div><div class="line">    <span class="attr">"user"</span>: <span class="string">"sensu"</span>,</div><div class="line">    <span class="attr">"password"</span>: <span class="string">"&lt;omitted&gt;"</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Copy the Sensu certificate and the private key from the monitoring server to <code>/etc/sensu/ssl/cert.pem</code> and <code>/etc/sensu/ssl/key.pem</code>:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">scp ubuntu@monitor.r-hub.io:/etc/sensu/ssl/cert.pem .</div><div class="line">scp ubuntu@monitor.r-hub.io:/etc/sensu/ssl/key.pem .</div><div class="line">...</div></pre></td></tr></table></figure></p>
+<p>Make sure they are owned by <code>sensu:sensu</code>.</p>
+<p>Put this into <code>/etc/sensu/conf.d/client.json</code>:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;client&quot;: &#123;</div><div class="line">    &quot;name&quot;: &quot;cran.r-hub.io&quot;,</div><div class="line">    &quot;address&quot;: &quot;13.88.23.239&quot;,</div><div class="line">    &quot;subscriptions&quot;: [ &quot;common&quot; ]</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Enable sensu on boot, start the client:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo update-rc.d sensu-client defaults</div><div class="line">sudo /etc/init.d/sensu-client start</div></pre></td></tr></table></figure></p>
+<p>Enable the client in the AWS firewall, in the <code>sensu dashboard</code> security group.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Yuuuhooooo! Working on r-hub again!&lt;/p&gt;
+&lt;h2 id=&quot;OS-updates&quot;&gt;&lt;a href=&quot;#OS-updates&quot; class=&quot;headerlink&quot; title=&quot;OS updates&quot;&gt;&lt;/a&gt;OS updates&lt;/h
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>Nice(r) output at the R command line</title>
