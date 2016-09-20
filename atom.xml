@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://log.github.io/"/>
-  <updated>2016-09-20T12:52:26.000Z</updated>
+  <updated>2016-09-20T21:03:00.000Z</updated>
   <id>http://log.github.io/</id>
   
   <author>
@@ -16,11 +16,37 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>More admin tasks and dealing with Azure</title>
+    <link href="http://log.github.io/2016/09/20/2016-09-20-more-admin-tasks/"/>
+    <id>http://log.github.io/2016/09/20/2016-09-20-more-admin-tasks/</id>
+    <published>2016-09-19T23:00:00.000Z</published>
+    <updated>2016-09-20T21:03:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Sensu-plugins-on-clients"><a href="#Sensu-plugins-on-clients" class="headerlink" title="Sensu plugins on clients"></a>Sensu plugins on clients</h2><p>OK, for the Sensu addition yesterday it turns out that two Sensu<br>plugins are also needed on clients:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sensu-install -p cpu-checks</div><div class="line">sensu-install -p disk-checks</div></pre></td></tr></table></figure>
+<p>and then the new Sensu client is all green.</p>
+<h2 id="Getting-rid-of-a-Sensu-check"><a href="#Getting-rid-of-a-Sensu-check" class="headerlink" title="Getting rid of a Sensu check"></a>Getting rid of a Sensu check</h2><p>This is surprisingly difficult. Yesterday I switched <code>cranlogs.r-pkg.org</code> to HTTPS, after getting a new certificate for it. It seems to work fine now, I don’t know what was the problem last time (<a href="https://github.com/metacran/cranlogs.app/issues/22" target="_blank" rel="external">https://github.com/metacran/cranlogs.app/issues/22</a>), but it works fine today.</p>
+<p>I also updated the Sensu checks for <code>cranlogs</code>, to check HTTPS and also the HTTP -&gt; HTTPS redirect. It seems that to get rid of the old check, one has to restart the Sensu server and the client as well, both running on <code>monitor.r-hub.io</code> in this case.</p>
+<p>Also, one needs to put the port number into the check. Even if the nginx redirect header does not have it: <code>https://cranlogs.r-pkg.org:443/downloads/daily/last-week/igraph</code></p>
+<h2 id="Azure-disk-attach-detach"><a href="#Azure-disk-attach-detach" class="headerlink" title="Azure disk attach/detach"></a>Azure disk attach/detach</h2><p>This seems to a straightforwars enough operation, but it is not. Make sure that you close the browser tab, and open a new one to Azure, after each detach/attach operation, because the UI does not refresh the state of the disk. It is actually the same for the state of the virtual machine, you click on Stop, it stops (after some time), but the state is never updated, until a new browser UI window is used.</p>
+<p>I wonder who thought this was a good idea. It only took me ~4 hours to solve this, thank you.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Sensu-plugins-on-clients&quot;&gt;&lt;a href=&quot;#Sensu-plugins-on-clients&quot; class=&quot;headerlink&quot; title=&quot;Sensu plugins on clients&quot;&gt;&lt;/a&gt;Sensu plugins 
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>Some regular admin tasks to start the day</title>
     <link href="http://log.github.io/2016/09/19/2016-09-19-admin-tasks/"/>
     <id>http://log.github.io/2016/09/19/2016-09-19-admin-tasks/</id>
     <published>2016-09-18T23:00:00.000Z</published>
-    <updated>2016-09-20T12:52:26.000Z</updated>
+    <updated>2016-09-20T20:41:07.000Z</updated>
     
     <content type="html"><![CDATA[<p>Yuuuhooooo! Working on r-hub again!</p>
 <h2 id="OS-updates"><a href="#OS-updates" class="headerlink" title="OS updates"></a>OS updates</h2><p>First of all, I ran <code>apt-get update; apt-get upgrade</code> etc. on the various hosts:</p>
@@ -44,7 +70,7 @@
 <li>shut down the machine,</li>
 <li><em>stop it</em> from the Azure web portal (wait for it…),</li>
 <li>resize the disk on the Azure web portal,</li>
-<li>start the machine.<br>Resized to 100GiB now, this should be enough for a lot<br>of images.</li>
+<li>start the machine.<br>Resized to 100GiB now, this should be enough for a lot of images.</li>
 </ul>
 <h2 id="SSL-certificates"><a href="#SSL-certificates" class="headerlink" title="SSL certificates"></a>SSL certificates</h2><p>Next, I updated the SSL certificates for</p>
 <ul>
