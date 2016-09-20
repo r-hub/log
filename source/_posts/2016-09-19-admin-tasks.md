@@ -30,8 +30,7 @@ The disk of `cran-r-hub.io` was filling up. This is the machine that builds the 
 * *stop it* from the Azure web portal (wait for it...),
 * resize the disk on the Azure web portal,
 * start the machine.
-Resized to 100GiB now, this should be enough for a lot
-of images.
+Resized to 100GiB now, this should be enough for a lot of images.
 
 ## SSL certificates
 
