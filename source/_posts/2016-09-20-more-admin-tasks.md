@@ -28,3 +28,15 @@ Also, one needs to put the port number into the check. Even if the nginx redirec
 This seems to a straightforwars enough operation, but it is not. Make sure that you close the browser tab, and open a new one to Azure, after each detach/attach operation, because the UI does not refresh the state of the disk. It is actually the same for the state of the virtual machine, you click on Stop, it stops (after some time), but the state is never updated, until a new browser UI window is used.
 
 I wonder who thought this was a good idea. It only took me ~4 hours to solve this, thank you.
+
+## Fedora update
+
+Finally I fixed the Docker builds in `cran.r-hub.io`, and built new Fedora images. (https://github.com/r-hub/rhub-linux-builders/pull/12#issuecomment-247629893)
+
+In the process of brushing up Jenkins, I made sure that I get emails about failures, both from `cran.r-hub.io` and `jenkins.r-pkg.org`. For this one needs to install `postfix`, and on `jenkins.r-pkg.org`, one also needs to allow the Docker subnets in the `main.mf` `postfix` config file, because there Jenkins runs in a container.
+
+The only glitch is that the clang image does not build, because I would need another external clang repository for that. :(
+
+## Dokku update on metacran
+
+I updated Dokku to the latest stable version (0.7.1) on `r-pkg.org`. This affects `cranlogs.r-pkg.org`, `rversions.r-pkg.org`, `crandeps.r-pkg.org` as well. The new version uses the new plugins for Redis and PostgreSQL as well.
