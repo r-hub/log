@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://log.github.io/"/>
-  <updated>2016-09-22T11:24:45.000Z</updated>
+  <updated>2016-09-22T13:39:27.000Z</updated>
   <id>http://log.github.io/</id>
   
   <author>
@@ -14,6 +14,20 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title></title>
+    <link href="http://log.github.io/2016/09/22/2016-09-22-todo-list/"/>
+    <id>http://log.github.io/2016/09/22/2016-09-22-todo-list/</id>
+    <published>2016-09-22T13:39:27.000Z</published>
+    <updated>2016-09-22T13:39:27.000Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>More admin tasks and dealing with Azure</title>
@@ -314,6 +328,26 @@
   </entry>
   
   <entry>
+    <title>The r-hub log</title>
+    <link href="http://log.github.io/2016/07/04/2016-07-04-the-r-hub-log/"/>
+    <id>http://log.github.io/2016/07/04/2016-07-04-the-r-hub-log/</id>
+    <published>2016-07-03T23:00:00.000Z</published>
+    <updated>2016-09-13T12:25:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Welcome to the r-hub log. r-hub is a project to build infrastructure for R users. See more about it in the <a href="https://github.com/r-hub/proposal" target="_blank" rel="external">project proposal</a>.</p>
+<h2 id="About-this-log"><a href="#About-this-log" class="headerlink" title="About this log"></a>About this log</h2><p>This log serves as a notebook for what is being done on r-hub. I probably will not make an effort to make it very readable, and it will be mostly technical.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Welcome to the r-hub log. r-hub is a project to build infrastructure for R users. See more about it in the &lt;a href=&quot;https://github.com/r-
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>Fighting with Jenkins</title>
     <link href="http://log.github.io/2016/07/04/2016-07-04-jenkins-post/"/>
     <id>http://log.github.io/2016/07/04/2016-07-04-jenkins-post/</id>
@@ -339,26 +373,6 @@
     <summary type="html">
     
       &lt;h3 id=&quot;Streaming-output-from-Jenkins&quot;&gt;&lt;a href=&quot;#Streaming-output-from-Jenkins&quot; class=&quot;headerlink&quot; title=&quot;Streaming output from Jenkins&quot;&gt;&lt;/a
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>The r-hub log</title>
-    <link href="http://log.github.io/2016/07/04/2016-07-04-the-r-hub-log/"/>
-    <id>http://log.github.io/2016/07/04/2016-07-04-the-r-hub-log/</id>
-    <published>2016-07-03T23:00:00.000Z</published>
-    <updated>2016-09-13T12:25:25.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Welcome to the r-hub log. r-hub is a project to build infrastructure for R users. See more about it in the <a href="https://github.com/r-hub/proposal" target="_blank" rel="external">project proposal</a>.</p>
-<h2 id="About-this-log"><a href="#About-this-log" class="headerlink" title="About this log"></a>About this log</h2><p>This log serves as a notebook for what is being done on r-hub. I probably will not make an effort to make it very readable, and it will be mostly technical.</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Welcome to the r-hub log. r-hub is a project to build infrastructure for R users. See more about it in the &lt;a href=&quot;https://github.com/r-
     
     </summary>
     
