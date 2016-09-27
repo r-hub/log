@@ -25,6 +25,13 @@ sudo apt-get update
 sudo apt-get install -y jenkins
 ```
 
+Need to change the jenkins startup options in `/etc/default/jenkins` to make sure Jenkins stores files in UTF-8, because it seems to ignore the system locale:
+```
+JAVA_ARGS="-Dfile.encoding=UTF-8 ..."
+```
+
+The same flag must be added to the script that starts the workers, see later.
+
 ## Add/redirect DNS
 
 Set the A record of `jenkins.r-hub.io` to the new server.
