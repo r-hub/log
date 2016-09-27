@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://log.github.io/"/>
-  <updated>2016-09-27T07:44:00.000Z</updated>
+  <updated>2016-09-27T08:14:24.000Z</updated>
   <id>http://log.github.io/</id>
   
   <author>
@@ -20,13 +20,15 @@
     <link href="http://log.github.io/2016/09/26/2016-09-26-jenkins-from-scratch/"/>
     <id>http://log.github.io/2016/09/26/2016-09-26-jenkins-from-scratch/</id>
     <published>2016-09-25T23:00:00.000Z</published>
-    <updated>2016-09-27T07:44:00.000Z</updated>
+    <updated>2016-09-27T08:14:24.000Z</updated>
     
     <content type="html"><![CDATA[<p>I need a new Jenkins installation, because the current one has an annoying encoding bug. Even though the locale is set to UTF-8 and the log files are stored in UTF-8 internally, the log file is converted to another encoding when served over the web.</p>
 <p>Running Jenkins in a Docker container was not the best idea, in the sense that it was quite fiddly to manage. So I’ll install Jenkins now on a new VM, without Docker.</p>
 <h2 id="Installing-Jenkins"><a href="#Installing-Jenkins" class="headerlink" title="Installing Jenkins"></a>Installing Jenkins</h2><p>Create a new VM on Amazon. I used an Ubuntu 16.04 HVM AMI. The instructions are for older Ubuntu versions I guess, because they mention <code>openjdk-7-jre</code>, but I suppose, the newer Java should work fine.</p>
 <p>Follow <a href="https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu" target="_blank" rel="external">https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu</a>:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo apt-get update</div><div class="line">sudo apt-get upgrade</div><div class="line">sudo apt-get install -y openjdk-8-jre openjdk-8-jdk</div></pre></td></tr></table></figure></p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -</div><div class="line">sudo sh -c <span class="string">'echo deb http://pkg.jenkins.io/debian-stable binary/ &gt; /etc/apt/sources.list.d/jenkins.list'</span></div><div class="line">sudo apt-get update</div><div class="line">sudo apt-get install -y jenkins</div></pre></td></tr></table></figure>
+<p>Need to change the jenkins startup options in <code>/etc/default/jenkins</code> to make sure Jenkins stores files in UTF-8, because it seems to ignore the system locale:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">JAVA_ARGS=&quot;-Dfile.encoding=UTF-8 ...&quot;</div></pre></td></tr></table></figure></p>
+<p>The same flag must be added to the script that starts the workers, see later.</p>
 <h2 id="Add-redirect-DNS"><a href="#Add-redirect-DNS" class="headerlink" title="Add/redirect DNS"></a>Add/redirect DNS</h2><p>Set the A record of <code>jenkins.r-hub.io</code> to the new server.</p>
 <h2 id="Configure-Jenkins"><a href="#Configure-Jenkins" class="headerlink" title="Configure Jenkins"></a>Configure Jenkins</h2><p>Make sure you have access to port 8080 on the instance, and then start configuring Jenkins from your browser.</p>
 <p>Install no plugin from the installer. It does not have the full list,<br>so we’ll have to install some plugins later, anyway. So we’ll do it all at once.</p>
