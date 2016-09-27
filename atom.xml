@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://log.github.io/"/>
-  <updated>2016-09-22T15:31:23.000Z</updated>
+  <updated>2016-09-27T07:44:00.000Z</updated>
   <id>http://log.github.io/</id>
   
   <author>
@@ -14,6 +14,73 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>New Jenkins install to manage the builds</title>
+    <link href="http://log.github.io/2016/09/26/2016-09-26-jenkins-from-scratch/"/>
+    <id>http://log.github.io/2016/09/26/2016-09-26-jenkins-from-scratch/</id>
+    <published>2016-09-25T23:00:00.000Z</published>
+    <updated>2016-09-27T07:44:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>I need a new Jenkins installation, because the current one has an annoying encoding bug. Even though the locale is set to UTF-8 and the log files are stored in UTF-8 internally, the log file is converted to another encoding when served over the web.</p>
+<p>Running Jenkins in a Docker container was not the best idea, in the sense that it was quite fiddly to manage. So I’ll install Jenkins now on a new VM, without Docker.</p>
+<h2 id="Installing-Jenkins"><a href="#Installing-Jenkins" class="headerlink" title="Installing Jenkins"></a>Installing Jenkins</h2><p>Create a new VM on Amazon. I used an Ubuntu 16.04 HVM AMI. The instructions are for older Ubuntu versions I guess, because they mention <code>openjdk-7-jre</code>, but I suppose, the newer Java should work fine.</p>
+<p>Follow <a href="https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu" target="_blank" rel="external">https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu</a>:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo apt-get update</div><div class="line">sudo apt-get upgrade</div><div class="line">sudo apt-get install -y openjdk-8-jre openjdk-8-jdk</div></pre></td></tr></table></figure></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -</div><div class="line">sudo sh -c <span class="string">'echo deb http://pkg.jenkins.io/debian-stable binary/ &gt; /etc/apt/sources.list.d/jenkins.list'</span></div><div class="line">sudo apt-get update</div><div class="line">sudo apt-get install -y jenkins</div></pre></td></tr></table></figure>
+<h2 id="Add-redirect-DNS"><a href="#Add-redirect-DNS" class="headerlink" title="Add/redirect DNS"></a>Add/redirect DNS</h2><p>Set the A record of <code>jenkins.r-hub.io</code> to the new server.</p>
+<h2 id="Configure-Jenkins"><a href="#Configure-Jenkins" class="headerlink" title="Configure Jenkins"></a>Configure Jenkins</h2><p>Make sure you have access to port 8080 on the instance, and then start configuring Jenkins from your browser.</p>
+<p>Install no plugin from the installer. It does not have the full list,<br>so we’ll have to install some plugins later, anyway. So we’ll do it all at once.</p>
+<p>Create an admin user called <code>admin</code>, and a secure password.</p>
+<p>Install the following plugins using the plugin manager:</p>
+<ul>
+<li>Build timeout plugin</li>
+<li>Cross-platform shell plugin</li>
+<li>Email extension plugin</li>
+<li>Elastic axis plugin</li>
+<li>Groovy postbuild plugin</li>
+<li>Mailer plugin</li>
+<li>PowerShell plugin</li>
+<li>Self-Organizing Swarm Plug-in Modules</li>
+<li>SSH Slaves plugin</li>
+<li>Workspace cleanup plugins</li>
+</ul>
+<p>Then configure Jenkins:</p>
+<ul>
+<li>Set the quiet period to <code>0</code>, no need to wait before starting a build.</li>
+<li>Setup global environment variables: <code>PS4=&quot;+R-HUB-R-HUB-R-HUB&quot;</code></li>
+<li>Jenkins URL: <code>http://jenkins.r-hub.io:8080/</code></li>
+<li>Admin email address: <code>admin@r-hub.io</code></li>
+<li>Extended email notification requires some configuration:<ol>
+<li>SMTP server: <code>127.0.0.1</code></li>
+<li>Default User email suffix: <code>@r-hub.io</code></li>
+<li>Reply-to list: <code>admin@r-hub.io</code></li>
+</ol>
+</li>
+<li>In Jenkins global security config, set the TCP port for JNLP agents to fixed 50000.</li>
+<li>Set the Security realm to Jenkins’ own user database, do not allow users to sign up</li>
+<li>Set the authorization to Matrix-based security, give overall <em>Administter</em> rights to <code>admin</code></li>
+<li>Turn <em>off</em> the “Prevent Cross Site Request Forgery exploits” switch. This does not work currently, I am not sure why.</li>
+<li>Turn on Slave → Master Access Control</li>
+</ul>
+<h2 id="Install-and-configure-mail-server"><a href="#Install-and-configure-mail-server" class="headerlink" title="Install and configure mail server"></a>Install and configure mail server</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-get install postfix</div></pre></td></tr></table></figure>
+<p>The name of the system is <code>jenkins.r-hub.io</code>.</p>
+<h2 id="Add-workers"><a href="#Add-workers" class="headerlink" title="Add workers"></a>Add workers</h2><p>SSH to a Linux worker, and restart the swarm process:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">restart swarm JENKINS_PASSWORD=&lt;passwd&gt; RHUB_IP=jenkins.r-hub.io</div></pre></td></tr></table></figure></p>
+<p>On the windows workers, just restart the Java process with the new Jenkins server</p>
+<p>Quite annoyingly, Azure sometimes changes the IP address of the builders, and then I need to update the <code>jenkins</code> security group on AWS.</p>
+<h2 id="Update-builder-config"><a href="#Update-builder-config" class="headerlink" title="Update builder config"></a>Update builder config</h2><p>Make sure that the Jenkins server, and the builder server (that runs the frontend and the backend) are both have the same (<code>default</code>) security group.</p>
+<p>Configure the <code>JENKINS_URL</code> environment variable on dokku, use the internal IP address of the Jenkins server. E.g.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dokku config:<span class="built_in">set</span> cron JENKINS_URL=http://admin:&lt;passwd&gt;@172.31.30.118:8080</div></pre></td></tr></table></figure>
+<p>Do this for all node apps that need access to Jenkins: <code>builder</code>, <code>buidler-test</code>, <code>backend</code> and <code>cron</code> currently.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;I need a new Jenkins installation, because the current one has an annoying encoding bug. Even though the locale is set to UTF-8 and the l
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>TODO list for this and next week</title>
@@ -163,28 +230,6 @@
   </entry>
   
   <entry>
-    <title>The first Windows Build</title>
-    <link href="http://log.github.io/2016/09/12/2016-09-12-first-windows-build/"/>
-    <id>http://log.github.io/2016/09/12/2016-09-12-first-windows-build/</id>
-    <published>2016-09-11T23:00:00.000Z</published>
-    <updated>2016-09-13T12:27:14.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>… just finished on the test server. It does have some glitches, but it is a start!</p>
-<p>The main glitch is that the output is not streamed. This will require some more PowerShell tricks to fix. The problem is that the output is coming from another process, ran by another user, and this is apparently non-standard.</p>
-<p>A bigger issue will be to work out how we should use <code>sysreqs</code> on Windows.</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;… just finished on the test server. It does have some glitches, but it is a start!&lt;/p&gt;
-&lt;p&gt;The main glitch is that the output is not strea
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
     <title>Windows builds are streaming output</title>
     <link href="http://log.github.io/2016/09/12/2016-09-13-windows-builds-streaming/"/>
     <id>http://log.github.io/2016/09/12/2016-09-13-windows-builds-streaming/</id>
@@ -206,6 +251,28 @@
     
       &lt;p&gt;And it only took me half a day. :)&lt;/p&gt;
 &lt;p&gt;Lesson learned: in PowerShell, if you &lt;code&gt;WaitForExit&lt;/code&gt; on a &lt;code&gt;Process&lt;/code&gt;, then 
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>The first Windows Build</title>
+    <link href="http://log.github.io/2016/09/12/2016-09-12-first-windows-build/"/>
+    <id>http://log.github.io/2016/09/12/2016-09-12-first-windows-build/</id>
+    <published>2016-09-11T23:00:00.000Z</published>
+    <updated>2016-09-13T12:27:14.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>… just finished on the test server. It does have some glitches, but it is a start!</p>
+<p>The main glitch is that the output is not streamed. This will require some more PowerShell tricks to fix. The problem is that the output is coming from another process, ran by another user, and this is apparently non-standard.</p>
+<p>A bigger issue will be to work out how we should use <code>sysreqs</code> on Windows.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;… just finished on the test server. It does have some glitches, but it is a start!&lt;/p&gt;
+&lt;p&gt;The main glitch is that the output is not strea
     
     </summary>
     
