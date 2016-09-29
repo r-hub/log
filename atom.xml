@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://log.github.io/"/>
-  <updated>2016-09-27T08:14:24.000Z</updated>
+  <updated>2016-09-27T16:16:02.000Z</updated>
   <id>http://log.github.io/</id>
   
   <author>
@@ -14,6 +14,36 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>This week&#39;s admin bits, ticking off the TODO list</title>
+    <link href="http://log.github.io/2016/09/27/2016-09-27-ticking-off-todo-list/"/>
+    <id>http://log.github.io/2016/09/27/2016-09-27-ticking-off-todo-list/</id>
+    <published>2016-09-26T23:00:00.000Z</published>
+    <updated>2016-09-27T16:16:02.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Build-time-limits"><a href="#Build-time-limits" class="headerlink" title="Build time limits"></a>Build time limits</h2><p>It is ten minutes without output currently. The time limit plugin does not allow me to set an additional hard limit as well…</p>
+<h2 id="Passing-arguments-to-R-CMD-check"><a href="#Passing-arguments-to-R-CMD-check" class="headerlink" title="Passing arguments to R CMD check"></a>Passing arguments to <code>R CMD check</code></h2><p>Works now on Linux. Need to write some PowerShell to make it work on Windows: <a href="https://github.com/r-hub/wincheck/issues/6" target="_blank" rel="external">https://github.com/r-hub/wincheck/issues/6</a></p>
+<h2 id="Docker-cleanup-on-the-image-builder"><a href="#Docker-cleanup-on-the-image-builder" class="headerlink" title="Docker cleanup on the image builder"></a>Docker cleanup on the image builder</h2><p>The docker image builder cleans up old images and containers now.<br>The builders should do the same, ideally.</p>
+<h2 id="Installing-valgrind"><a href="#Installing-valgrind" class="headerlink" title="Installing valgrind"></a>Installing valgrind</h2><p>On all ~15 Linux images, to make sure it works.</p>
+<h2 id="rhub-package-fixes"><a href="#rhub-package-fixes" class="headerlink" title="rhub package fixes:"></a><code>rhub</code> package fixes:</h2><ul>
+<li><p>Allow the email tokens from the web app in the CLI app as well: <a href="https://github.com/gaborcsardi/rhub/issues/8" target="_blank" rel="external">https://github.com/gaborcsardi/rhub/issues/8</a> The other way does not work currently.</p>
+</li>
+<li><p>Checking tarballs works now: <a href="https://github.com/gaborcsardi/rhub/issues/14" target="_blank" rel="external">https://github.com/gaborcsardi/rhub/issues/14</a></p>
+</li>
+<li><p>SAN runs work fine now: <a href="https://github.com/r-hub/rhub-backend/issues/10" target="_blank" rel="external">https://github.com/r-hub/rhub-backend/issues/10</a> <a href="https://github.com/gaborcsardi/rhub/issues/9" target="_blank" rel="external">https://github.com/gaborcsardi/rhub/issues/9</a></p>
+</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Build-time-limits&quot;&gt;&lt;a href=&quot;#Build-time-limits&quot; class=&quot;headerlink&quot; title=&quot;Build time limits&quot;&gt;&lt;/a&gt;Build time limits&lt;/h2&gt;&lt;p&gt;It is ten 
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>New Jenkins install to manage the builds</title>
@@ -89,16 +119,16 @@
     <link href="http://log.github.io/2016/09/22/2016-09-22-todo-list/"/>
     <id>http://log.github.io/2016/09/22/2016-09-22-todo-list/</id>
     <published>2016-09-21T23:00:00.000Z</published>
-    <updated>2016-09-22T15:31:23.000Z</updated>
+    <updated>2016-09-28T07:37:17.000Z</updated>
     
     <content type="html"><![CDATA[<ol>
 <li>Fix up the <code>rhub</code> R package, make it public.</li>
-<li>Provide proper sanitizer output from the SAN image</li>
+<li>✔ Provide proper sanitizer output from the SAN image</li>
 <li>More Windows versions: R-devel, R-release, R-patched.</li>
 <li>Create a proper Windows builder image</li>
 <li>Nice output in emails</li>
-<li>Build time limit</li>
-<li>Passing arguments to the build command, e.g. <code>--valgrind</code></li>
+<li>✔ Build time limit</li>
+<li>✔ Passing arguments to the build command, e.g. <code>--valgrind</code></li>
 <li>Think about <code>sysreqs</code> on Windows</li>
 <li>Think about caching binaries for Linux</li>
 </ol>
@@ -108,8 +138,8 @@
     
       &lt;ol&gt;
 &lt;li&gt;Fix up the &lt;code&gt;rhub&lt;/code&gt; R package, make it public.&lt;/li&gt;
-&lt;li&gt;Provide proper sanitizer output from the SAN image&lt;/li&gt;
-&lt;li&gt;More W
+&lt;li&gt;✔ Provide proper sanitizer output from the SAN image&lt;/li&gt;
+&lt;li&gt;More
     
     </summary>
     
@@ -232,6 +262,28 @@
   </entry>
   
   <entry>
+    <title>The first Windows Build</title>
+    <link href="http://log.github.io/2016/09/12/2016-09-12-first-windows-build/"/>
+    <id>http://log.github.io/2016/09/12/2016-09-12-first-windows-build/</id>
+    <published>2016-09-11T23:00:00.000Z</published>
+    <updated>2016-09-13T12:27:14.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>… just finished on the test server. It does have some glitches, but it is a start!</p>
+<p>The main glitch is that the output is not streamed. This will require some more PowerShell tricks to fix. The problem is that the output is coming from another process, ran by another user, and this is apparently non-standard.</p>
+<p>A bigger issue will be to work out how we should use <code>sysreqs</code> on Windows.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;… just finished on the test server. It does have some glitches, but it is a start!&lt;/p&gt;
+&lt;p&gt;The main glitch is that the output is not strea
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>Windows builds are streaming output</title>
     <link href="http://log.github.io/2016/09/12/2016-09-13-windows-builds-streaming/"/>
     <id>http://log.github.io/2016/09/12/2016-09-13-windows-builds-streaming/</id>
@@ -253,28 +305,6 @@
     
       &lt;p&gt;And it only took me half a day. :)&lt;/p&gt;
 &lt;p&gt;Lesson learned: in PowerShell, if you &lt;code&gt;WaitForExit&lt;/code&gt; on a &lt;code&gt;Process&lt;/code&gt;, then 
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>The first Windows Build</title>
-    <link href="http://log.github.io/2016/09/12/2016-09-12-first-windows-build/"/>
-    <id>http://log.github.io/2016/09/12/2016-09-12-first-windows-build/</id>
-    <published>2016-09-11T23:00:00.000Z</published>
-    <updated>2016-09-13T12:27:14.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>… just finished on the test server. It does have some glitches, but it is a start!</p>
-<p>The main glitch is that the output is not streamed. This will require some more PowerShell tricks to fix. The problem is that the output is coming from another process, ran by another user, and this is apparently non-standard.</p>
-<p>A bigger issue will be to work out how we should use <code>sysreqs</code> on Windows.</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;… just finished on the test server. It does have some glitches, but it is a start!&lt;/p&gt;
-&lt;p&gt;The main glitch is that the output is not strea
     
     </summary>
     
