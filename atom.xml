@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://log.github.io/"/>
-  <updated>2016-09-27T16:16:02.000Z</updated>
+  <updated>2016-10-03T14:39:40.000Z</updated>
   <id>http://log.github.io/</id>
   
   <author>
@@ -17,10 +17,10 @@
   
   <entry>
     <title>This week&#39;s admin bits, ticking off the TODO list</title>
-    <link href="http://log.github.io/2016/09/27/2016-09-27-ticking-off-todo-list/"/>
-    <id>http://log.github.io/2016/09/27/2016-09-27-ticking-off-todo-list/</id>
-    <published>2016-09-26T23:00:00.000Z</published>
-    <updated>2016-09-27T16:16:02.000Z</updated>
+    <link href="http://log.github.io/2016/10/03/2016-09-27-ticking-off-todo-list/"/>
+    <id>http://log.github.io/2016/10/03/2016-09-27-ticking-off-todo-list/</id>
+    <published>2016-10-02T23:00:00.000Z</published>
+    <updated>2016-10-03T14:39:40.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Build-time-limits"><a href="#Build-time-limits" class="headerlink" title="Build time limits"></a>Build time limits</h2><p>It is ten minutes without output currently. The time limit plugin does not allow me to set an additional hard limit as well…</p>
 <h2 id="Passing-arguments-to-R-CMD-check"><a href="#Passing-arguments-to-R-CMD-check" class="headerlink" title="Passing arguments to R CMD check"></a>Passing arguments to <code>R CMD check</code></h2><p>Works now on Linux. Need to write some PowerShell to make it work on Windows: <a href="https://github.com/r-hub/wincheck/issues/6" target="_blank" rel="external">https://github.com/r-hub/wincheck/issues/6</a></p>
@@ -33,7 +33,25 @@
 </li>
 <li><p>SAN runs work fine now: <a href="https://github.com/r-hub/rhub-backend/issues/10" target="_blank" rel="external">https://github.com/r-hub/rhub-backend/issues/10</a> <a href="https://github.com/gaborcsardi/rhub/issues/9" target="_blank" rel="external">https://github.com/gaborcsardi/rhub/issues/9</a></p>
 </li>
+<li><p>I checked that the package works fine on Windows / OSX / Linux. We’ll have proper CI at some point…</p>
+</li>
+<li><p>Wrote a bunch of test cases. Found and fixed a couple of small bugs as well. <a href="https://github.com/gaborcsardi/rhub/issues/24" target="_blank" rel="external">https://github.com/gaborcsardi/rhub/issues/24</a></p>
+</li>
+<li><p>Wrote higher level wrapper functions, so one can just say <code>check_on_windows()</code> instead of selecting the exact platform. <a href="https://github.com/gaborcsardi/rhub/issues/20" target="_blank" rel="external">https://github.com/gaborcsardi/rhub/issues/20</a> <a href="https://github.com/gaborcsardi/rhub/issues/22" target="_blank" rel="external">https://github.com/gaborcsardi/rhub/issues/22</a></p>
+</li>
+<li><p>One can pass <code>R CMD check</code> arguments, e.g. <code>--valgrind</code> to the builder, and also environment variables. <a href="https://github.com/gaborcsardi/rhub/issues/4" target="_blank" rel="external">https://github.com/gaborcsardi/rhub/issues/4</a></p>
+</li>
 </ul>
+<h2 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h2><ul>
+<li><p>There is a nice image now, called <code>win-builder-2016-10-03</code> that has everything installed, hopefully.</p>
+</li>
+<li><p>The image has <code>r-oldrel</code>, <code>r-release</code>, <code>r-patched</code> and <code>r-devel</code> installed, and the frontend and backend also has everything needed to support them.</p>
+</li>
+</ul>
+<h2 id="HTTP-2"><a href="#HTTP-2" class="headerlink" title="HTTP/2"></a>HTTP/2</h2><ul>
+<li>It turns out that the stable nginx version (0.10.x) does not handle http/2 properly, so I had to turn it off. More details: <a href="https://github.com/gaborcsardi/rhub/issues/19" target="_blank" rel="external">https://github.com/gaborcsardi/rhub/issues/19</a> <a href="https://github.com/curl/curl/issues/1040" target="_blank" rel="external">https://github.com/curl/curl/issues/1040</a> <a href="https://github.com/dokku/dokku/issues/2435" target="_blank" rel="external">https://github.com/dokku/dokku/issues/2435</a></li>
+</ul>
+<p>So currently I still use nginx 0.10.x with http/2 turned off.</p>
 ]]></content>
     
     <summary type="html">
@@ -119,13 +137,13 @@
     <link href="http://log.github.io/2016/09/22/2016-09-22-todo-list/"/>
     <id>http://log.github.io/2016/09/22/2016-09-22-todo-list/</id>
     <published>2016-09-21T23:00:00.000Z</published>
-    <updated>2016-09-28T07:37:17.000Z</updated>
+    <updated>2016-10-03T08:00:21.000Z</updated>
     
     <content type="html"><![CDATA[<ol>
 <li>Fix up the <code>rhub</code> R package, make it public.</li>
 <li>✔ Provide proper sanitizer output from the SAN image</li>
-<li>More Windows versions: R-devel, R-release, R-patched.</li>
-<li>Create a proper Windows builder image</li>
+<li>✔ More Windows versions: R-devel, R-release, R-patched.</li>
+<li>✔ Create a proper Windows builder image</li>
 <li>Nice output in emails</li>
 <li>✔ Build time limit</li>
 <li>✔ Passing arguments to the build command, e.g. <code>--valgrind</code></li>
@@ -139,7 +157,7 @@
       &lt;ol&gt;
 &lt;li&gt;Fix up the &lt;code&gt;rhub&lt;/code&gt; R package, make it public.&lt;/li&gt;
 &lt;li&gt;✔ Provide proper sanitizer output from the SAN image&lt;/li&gt;
-&lt;li&gt;More
+&lt;li&gt;✔ Mo
     
     </summary>
     
