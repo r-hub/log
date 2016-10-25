@@ -2,11 +2,11 @@
 <p><img src="/images/nice-email-1.png" alt=""><br><img src="/images/nice-email-2.png" alt=""></p>
 <h3 id="Log-database"><a href="#Log-database" class="headerlink" title="Log database"></a>Log database</h3><p>The check logs are stored in a log database. This allows a better API, e.g. querying checks for an email address.</p>
 <h3 id="New-API-endpoints"><a href="#New-API-endpoints" class="headerlink" title="New API endpoints"></a>New API endpoints</h3><ul>
-<li>Better <code>status</code> API, using the log database.</li>
+<li>Better <code>status</code> API, using the log database, it handles multiple checks at once.</li>
 <li><code>livelog</code> to supply the build log in a non-stream format.</li>
 </ul>
 <h3 id="rhub-package-improvements"><a href="#rhub-package-improvements" class="headerlink" title="rhub package improvements"></a><code>rhub</code> package improvements</h3><ul>
-<li><code>status</code> API, to query the status of a build.</li>
+<li><code>status</code> API, to query the status of a build. It also handles multiple checks.</li>
 <li><code>list</code> API, to list checks for an email address and/or a package.</li>
 <li>Cache id of last submission. So the status can be checked easily.</li>
 <li>Platform chooser. This is used by default if no platform is specified and the R session is interactive.</li>
@@ -17,11 +17,15 @@
 </li>
 <li><p>Created a repository with small test packages, and known check output: <a href="https://github.com/r-hub/test-packages" target="_blank" rel="external">https://github.com/r-hub/test-packages</a></p>
 </li>
-<li><p>We use our internal CRAN mirror, to avoid external traffic, and speed up the check. This is on Linux only currently.</p>
+<li><p>We use our internal CRAN mirror, to avoid external traffic, and speed up the check. Both on Linux and Windows.</p>
 </li>
 <li><p>Avoid streaming the Jenkins log, this gives a nicer API for the R client. For example it avoids splitting into lines in R. This happends in JS now, and it is more reliable. It also reduces the traffic.</p>
 </li>
 <li><p>Handle <code>ABORTED</code> builds. These are typically timeouts because of no output.</p>
+</li>
+<li><p>Set _R_CRAN_FORCE<em>SUGGESTS</em> to false on all builders, but allow overriding it.</p>
+</li>
+<li><p>Fixed the Jenkins job reaper that runs every hour and removes jobs older than three days.</p>
 </li>
 </ul>
 </div><!-- comment system--><div class="container"><hr></div></article><footer id="footer"><div class="container"><div class="bar"><div class="social"><a href="/atom.xml" target="_blank"><i class="fa fa-rss"></i></a></div><div class="footer">© 2016 <a href="/" rel="nofollow">The r-hub log</a>. Powered by <a rel="nofollow" target="_blank" href="https://hexo.io">Hexo</a>. Theme <a target="_blank" href="https://github.com/lotabout/very-simple">very-simple</a>.</div></div></div></footer><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css"><script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script><script src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script><script>$(document).ready(function() {
