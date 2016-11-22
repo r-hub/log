@@ -9,4 +9,4 @@ If you looked at the R-hub notifications in the past two weeks, you might have n
 - Output of the tests.
 - Source R package. This should be the same as the uploaded one.
 - Binary R package for your platform.
-- Binary packages for all dependent packages that were built from source. This includes packages specified via the `Remotes` mechanism. See more about that [here](https://cran.rstudio.com/web/packages/devtools/vignettes/dependencies.html).
+- Binary packages for all dependent packages that were built from source. These include packages specified via the `Remotes` mechanism. See more about that [here](https://cran.rstudio.com/web/packages/devtools/vignettes/dependencies.html).
