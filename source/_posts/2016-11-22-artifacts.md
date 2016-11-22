@@ -8,5 +8,5 @@ If you looked at the R-hub notifications in the past two weeks, you might have n
 - The `00install.out` file, the output of the installation of the package. This is often helpful if the installation fails, as the normal check output omits the details in this case.
 - Output of the tests.
 - Source R package. This should be the same as the uploaded one.
-- Binary R package for your platforms.
-- Binary packages for all dependent packages that were built from source. This includes packages specified via the [`Remotes` mechanism](https://cran.rstudio.com/web/packages/devtools/vignettes/dependencies.html).
+- Binary R package for your platform.
+- Binary packages for all dependent packages that were built from source. This includes packages specified via the `Remotes` mechanism. See more about that [here](https://cran.rstudio.com/web/packages/devtools/vignettes/dependencies.html).
